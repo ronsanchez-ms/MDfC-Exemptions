@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 🛡️ Critical Security Vulnerability
+    url: https://github.com/ronsanchez-ms/MDfC-Exemptions/security/advisories
+    about: Report critical security vulnerabilities privately
+  - name: 💬 General Discussion
+    url: https://github.com/ronsanchez-ms/MDfC-Exemptions/discussions
+    about: Ask questions, share ideas, or discuss the project
+  - name: 📖 Azure Policy Documentation
+    url: https://docs.microsoft.com/en-us/azure/governance/policy/
+    about: Official Azure Policy documentation from Microsoft
