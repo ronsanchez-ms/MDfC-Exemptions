@@ -23,6 +23,10 @@
 # - Appropriate Azure RBAC permissions (Policy Contributor or higher)
 # - Review the README.md and documentation before use
 #
+# DEFAULT BEHAVIOR:
+# By default, the script looks for resources tagged with "DefenderExempt=true"
+# Tag resources you want to exempt with: DefenderExempt=true
+#
 # Examples:
 #   .\Manage-DefenderExemptions.ps1 -SubscriptionId "12345678-1234-1234-1234-123456789012" -ListOnly
 #   .\Manage-DefenderExemptions.ps1 -ManagementGroupId "mg-example" -IncludeChildSubscriptions -CreateExemptions
@@ -37,6 +41,9 @@ Manages Azure Policy exemptions for Microsoft Defender for Cloud recommendations
 This script helps manage policy exemptions for Microsoft Defender for Cloud by finding resources with specific tags
 and creating exemptions for them. It supports both subscription and management group level operations.
 
+By default, the script searches for resources tagged with "DefenderExempt=true". You can customize the tag name 
+and value using the -TagName and -TagValue parameters.
+
 .PARAMETER SubscriptionId
 The subscription ID to work with. If not specified, uses the current context subscription.
 Cannot be used together with ManagementGroupId.
@@ -49,9 +56,11 @@ within the appropriate subscriptions. Cannot be used together with SubscriptionI
 
 .PARAMETER TagName
 The name of the tag to filter resources by. Default is "DefenderExempt".
+To exempt a resource, tag it with this name and the specified TagValue.
 
 .PARAMETER TagValue
 The value of the tag to filter resources by. Default is "true".
+Resources must have TagName=TagValue to be processed for exemptions.
 
 .PARAMETER ExemptionCategory
 The category for the exemption. Valid values are "Waiver" or "Mitigated". Default is "Mitigated".
@@ -82,7 +91,11 @@ When used with ManagementGroupId, includes all child subscriptions in the operat
 
 .EXAMPLE
 .\Manage-DefenderExemptions.ps1 -SubscriptionId "12345678-1234-1234-1234-123456789012" -ListOnly
-Lists all existing exemptions for tagged resources in the specified subscription.
+Lists all existing exemptions for resources tagged with "DefenderExempt=true" in the specified subscription.
+
+.EXAMPLE
+.\Manage-DefenderExemptions.ps1 -SubscriptionId "12345678-1234-1234-1234-123456789012" -CreateExemptions
+Creates exemptions for all resources tagged with "DefenderExempt=true" in the specified subscription.
 
 .EXAMPLE
 .\Manage-DefenderExemptions.ps1 -ManagementGroupId "mg-example" -IncludeChildSubscriptions -CreateExemptions

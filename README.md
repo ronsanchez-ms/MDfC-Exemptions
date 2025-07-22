@@ -32,15 +32,43 @@ This directory contains the **PowerShell-focused** implementation of the Microso
 Install-Module -Name Az -Force -AllowClobber
 ```
 
+### 🏷️ Default Tag Configuration
+
+**By default, the script looks for resources tagged with:**
+- **Tag Name**: `DefenderExempt`
+- **Tag Value**: `true`
+
+**To exempt a resource from Defender policies:**
+1. Add the tag `DefenderExempt` with value `true` to your Azure resource
+2. Run the script with `-CreateExemptions` parameter
+
+**Example in Azure CLI:**
+```bash
+# Tag a resource for exemption
+az resource tag --tags DefenderExempt=true --ids "/subscriptions/{sub-id}/resourceGroups/{rg}/providers/{provider}/{resource-name}"
+```
+
+**Example in PowerShell:**
+```powershell
+# Tag a resource for exemption
+$resource = Get-AzResource -Name "MyResource" -ResourceGroupName "MyRG"
+Set-AzResource -ResourceId $resource.ResourceId -Tag @{DefenderExempt="true"} -Force
+```
+
+You can customize these defaults using the `-TagName` and `-TagValue` parameters.
+
 ### Basic Usage
 ```powershell
-# List exemptions for current subscription
+# List exemptions for resources tagged with "DefenderExempt=true" (default)
 .\Manage-DefenderExemptions.ps1 -ListOnly
 
-# Create exemptions for tagged resources
+# Create exemptions for resources tagged with "DefenderExempt=true" (default)
 .\Manage-DefenderExemptions.ps1 -CreateExemptions
 
-# Work with management groups
+# Work with custom tags
+.\Manage-DefenderExemptions.ps1 -TagName "SkipDefender" -TagValue "yes" -CreateExemptions
+
+# Work with management groups (includes all child subscriptions)
 .\Manage-DefenderExemptions.ps1 -ManagementGroupId "mg-example" -IncludeChildSubscriptions -CreateExemptions
 
 # Check MCSB coverage across management group
