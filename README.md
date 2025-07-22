@@ -42,17 +42,16 @@ Install-Module -Name Az -Force -AllowClobber
 1. Add the tag `DefenderExempt` with value `true` to your Azure resource
 2. Run the script with `-CreateExemptions` parameter
 
-**Example in Azure CLI:**
-```bash
-# Tag a resource for exemption
-az resource tag --tags DefenderExempt=true --ids "/subscriptions/{sub-id}/resourceGroups/{rg}/providers/{provider}/{resource-name}"
-```
-
 **Example in PowerShell:**
 ```powershell
 # Tag a resource for exemption
 $resource = Get-AzResource -Name "MyResource" -ResourceGroupName "MyRG"
 Set-AzResource -ResourceId $resource.ResourceId -Tag @{DefenderExempt="true"} -Force
+
+# Tag multiple resources for exemption
+Get-AzResource -ResourceGroupName "MyRG" | ForEach-Object {
+    Set-AzResource -ResourceId $_.ResourceId -Tag @{DefenderExempt="true"} -Force
+}
 ```
 
 You can customize these defaults using the `-TagName` and `-TagValue` parameters.
